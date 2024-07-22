@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+@layer base {
+  input {
+    @apply w-[250px] py-2 px-3 border-2 border-blue-600 rounded-lg outline-none;
+  }
+  .btnsubmit {
+    @apply bg-blue-600 px-4 py-2 text-white rounded-md shadow-md;
+  }
+}
