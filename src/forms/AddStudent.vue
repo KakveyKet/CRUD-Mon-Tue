@@ -11,7 +11,15 @@
           <input required type="number" id="age" v-model="age" />
         </div>
         <br />
-        <button class="btnsubmit">Submit</button>
+        <button type="submit" class="btnsubmit">Submit</button>
+
+        <button
+          type="button"
+          class="btnsubmit bg-red-500 ml-4"
+          @click="handleClose"
+        >
+          Close
+        </button>
       </form>
     </div>
   </div>
@@ -21,7 +29,8 @@
 import { ref } from "vue";
 import axios from "axios";
 export default {
-  setup() {
+  props: [""],
+  setup(props, { emit }) {
     const name = ref("");
     const age = ref("");
     const handleSubmit = async () => {
@@ -39,7 +48,10 @@ export default {
         console.log(error);
       }
     };
-    return { handleSubmit, name, age };
+    const handleClose = () => {
+      emit("close");
+    };
+    return { handleSubmit, name, age, handleClose };
   },
 };
 </script>
