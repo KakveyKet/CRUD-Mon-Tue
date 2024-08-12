@@ -33,17 +33,29 @@ export default {
   setup(props, { emit }) {
     const name = ref("");
     const age = ref("");
+
     const handleSubmit = async () => {
       const reqbody = {
         name: name.value,
         age: age.value,
       };
+
       try {
-        const response = await axios.post(
-          "http://localhost:3000/students",
-          reqbody
-        );
-        console.log(response.data);
+        if (props.datatoedit) {
+          const response = await axios.put(
+            `http://localhost:3000/students/${props.datatoedit.id}`,
+            reqbody
+          );
+          console.log("data updated", response.data);
+          handleClose();
+        } else {
+          const response = await axios.post(
+            "http://localhost:3000/students",
+            reqbody
+          );
+          console.log("data added", response.data);
+          handleClose();
+        }
       } catch (error) {
         console.log(error);
       }

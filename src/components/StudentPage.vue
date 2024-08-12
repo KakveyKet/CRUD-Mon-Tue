@@ -111,6 +111,7 @@ export default {
     const handleClose = () => {
       isOpen.value = false;
       currentComponent.value = "";
+      getStudents();
     };
 
     const student = ref([]);
