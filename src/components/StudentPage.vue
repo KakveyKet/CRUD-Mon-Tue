@@ -2,16 +2,26 @@
   <div class="relative">
     <!-- api -->
     <button class="btnsubmit" @click="handleAddStudent">Add Student</button>
-    <div
-      class="p-5 bg-indigo-500 rounded-lg shadow-md ml-8 mt-8 w-fit text-white"
-    >
-      <div class="grid grid-cols-3 gap-4">
-        <StudentCard
-          :data="data"
-          v-for="(data, index) in student"
-          :key="index"
-        />
-      </div>
+    <div class="p-5 rounded-lg shadow-md ml-8 mt-8 w-fit">
+      <table>
+        <tr>
+          <th class="w-[200px] text-blue-500 font-semibold">Action</th>
+          <th class="w-[200px] text-blue-500 font-semibold">Id</th>
+          <th class="w-[200px] text-blue-500 font-semibold">Name</th>
+          <th class="w-[200px] text-blue-500 font-semibold">Age</th>
+        </tr>
+        <tr v-for="students in student" :key="students.id">
+          <td class="space-x-4">
+            <button class="text-red-500">Delete</button>
+            <button @click="handleEditData(students)" class="text-blue-500">
+              Edit
+            </button>
+          </td>
+          <td>{{ students.id }}</td>
+          <td>{{ students.name }}</td>
+          <td>{{ students.age }}</td>
+        </tr>
+      </table>
     </div>
     <TransitionRoot appear :show="isOpen" as="template">
       <Dialog as="div" @close="handleClose" class="relative z-10">
@@ -50,7 +60,11 @@
                   Add New Student
                 </DialogTitle>
                 <div class="mt-2">
-                  <component :is="currentComponent" @close="handleClose">
+                  <component
+                    :is="currentComponent"
+                    :datatoedit="datatoedit"
+                    @close="handleClose"
+                  >
                   </component>
                 </div>
               </DialogPanel>
@@ -98,6 +112,7 @@ export default {
       isOpen.value = false;
       currentComponent.value = "";
     };
+
     const student = ref([]);
     const getStudents = async () => {
       try {
@@ -107,6 +122,15 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    };
+
+    // edit
+    const datatoedit = ref(null);
+    const handleEditData = (item) => {
+      datatoedit.value = item;
+      console.log("data", datatoedit.value);
+      isOpen.value = true;
+      currentComponent.value = "AddStudent";
     };
     onMounted(() => {
       getStudents();
@@ -118,11 +142,31 @@ export default {
       currentComponent,
       isOpen,
       handleClose,
+      handleEditData,
+      datatoedit,
     };
   },
 };
 </script>
 
+<style scoped>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
 <!-- ref -->
 <!-- computed -->
 <!-- OnMounted -->

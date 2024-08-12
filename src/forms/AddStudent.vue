@@ -26,10 +26,10 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 export default {
-  props: [""],
+  props: ["datatoedit"],
   setup(props, { emit }) {
     const name = ref("");
     const age = ref("");
@@ -51,6 +51,14 @@ export default {
     const handleClose = () => {
       emit("close");
     };
+
+    onMounted(() => {
+      if (props.datatoedit) {
+        name.value = props.datatoedit.name;
+        age.value = props.datatoedit.age;
+      }
+    });
+
     return { handleSubmit, name, age, handleClose };
   },
 };
