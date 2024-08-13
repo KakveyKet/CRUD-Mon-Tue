@@ -1,36 +1,6 @@
 {
   "students": [
     {
-      "name": "Tra",
-      "age": 90,
-      "id": "1"
-    },
-    {
-      "id": "2",
-      "name": "Daren",
-      "age": 18
-    },
-    {
-      "id": "3",
-      "name": "Nin",
-      "age": 18
-    },
-    {
-      "id": "4",
-      "name": "Nila",
-      "age": 18
-    },
-    {
-      "id": "5",
-      "name": "Emm",
-      "age": 18
-    },
-    {
-      "id": "29d7",
-      "name": "PP",
-      "age": 60
-    },
-    {
       "id": "1772",
       "name": "kakveysss",
       "age": 13
@@ -43,11 +13,6 @@
     {
       "id": "c340",
       "name": "hello",
-      "age": 123
-    },
-    {
-      "id": "b71b",
-      "name": "hi",
       "age": 123
     }
   ]
