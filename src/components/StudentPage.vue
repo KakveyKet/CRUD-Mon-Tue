@@ -12,61 +12,13 @@
         </tr>
         <tr v-for="students in student" :key="students.id">
           <td class="space-x-4">
-            <button
-              class="text-red-500"
-              @click="deleteConfirmation(students.id)"
-            >
+            <button class="text-red-500" @click="handleDeletePop(students.id)">
               Delete
             </button>
+
             <button @click="handleEditData(students)" class="text-blue-500">
               Edit
             </button>
-            <TransitionRoot appear :show="isDelete" as="template">
-              <Dialog as="div" @close="closeDelete" class="relative z-10">
-                <TransitionChild
-                  as="template"
-                  enter="duration-300 ease-out"
-                  enter-from="opacity-0"
-                  enter-to="opacity-100"
-                  leave="duration-200 ease-in"
-                  leave-from="opacity-100"
-                  leave-to="opacity-0"
-                >
-                  <div class="fixed inset-0 bg-black/25" />
-                </TransitionChild>
-
-                <div class="fixed inset-0 overflow-y-auto">
-                  <div
-                    class="flex min-h-full items-center justify-center p-4 text-center"
-                  >
-                    <TransitionChild
-                      as="template"
-                      enter="duration-300 ease-out"
-                      enter-from="opacity-0 scale-95"
-                      enter-to="opacity-100 scale-100"
-                      leave="duration-200 ease-in"
-                      leave-from="opacity-100 scale-100"
-                      leave-to="opacity-0 scale-95"
-                    >
-                      <DialogPanel
-                        class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
-                      >
-                        <DialogTitle
-                          as="h3"
-                          class="text-lg font-medium leading-6 text-gray-900"
-                        >
-                          Delete Confirm
-                        </DialogTitle>
-                        <div class="mt-2">
-                          <button>Cancel</button>
-                          <button @click="handleDelete(currentId)">Yes</button>
-                        </div>
-                      </DialogPanel>
-                    </TransitionChild>
-                  </div>
-                </div>
-              </Dialog>
-            </TransitionRoot>
           </td>
           <td>{{ students.id }}</td>
           <td>{{ students.name }}</td>
@@ -74,6 +26,7 @@
         </tr>
       </table>
     </div>
+
     <TransitionRoot appear :show="isOpen" as="template">
       <Dialog as="div" @close="handleClose" class="relative z-10">
         <TransitionChild
@@ -124,6 +77,53 @@
         </div>
       </Dialog>
     </TransitionRoot>
+
+    <TransitionRoot appear :show="isDelete" as="template">
+      <Dialog as="div" @close="handleCloseDelete" class="relative z-10">
+        <TransitionChild
+          as="template"
+          enter="duration-300 ease-out"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="duration-200 ease-in"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black/25" />
+        </TransitionChild>
+
+        <div class="fixed inset-0 overflow-y-auto">
+          <div
+            class="flex min-h-full items-center justify-center p-4 text-center"
+          >
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <DialogPanel
+                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <DialogTitle
+                  as="h3"
+                  class="text-lg font-medium leading-6 text-gray-900"
+                >
+                  Delete Student student
+                </DialogTitle>
+                <div class="mt-2">
+                  <button @click="handleCloseDelete">Cancel</button>
+                  <button @click="confirmDetele(currnetId)">Yes</button>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 
@@ -162,6 +162,7 @@ export default {
     const handleClose = () => {
       isOpen.value = false;
       currentComponent.value = "";
+      datatoedit.value = null;
       getStudents();
     };
 
@@ -188,29 +189,27 @@ export default {
       getStudents();
     });
 
-    // delete
-
     const isDelete = ref(false);
-    const currentId = ref(null);
-
-    const deleteConfirmation = (id) => {
+    const currnetId = ref(null);
+    const handleDeletePop = (id) => {
       isDelete.value = true;
-      currentId.value = id;
+      currnetId.value = id;
+      console.log("student to delete", currnetId.value);
     };
 
-    const closeDelete = () => {
+    const handleCloseDelete = () => {
       isDelete.value = false;
+      currnetId.value = null;
     };
-
-    const handleDelete = async (id) => {
+    const confirmDetele = async (id) => {
       try {
         await axios.delete(`http://localhost:3000/students/${id}`);
-        console.log("Data deleted", id);
+        console.log("deleted", id);
+        handleCloseDelete();
+        getStudents();
       } catch (error) {
-        console.log(error);
+        console.log("delete student error", error);
       }
-      getStudents(); // Refresh the list of students after deletion
-      closeDelete(); // Close the delete confirmation dialog after deletion
     };
 
     return {
@@ -221,12 +220,13 @@ export default {
       handleClose,
       handleEditData,
       datatoedit,
+
       // delete
-      handleDelete,
+      handleDeletePop,
+      handleCloseDelete,
       isDelete,
-      deleteConfirmation,
-      closeDelete,
-      currentId,
+      confirmDetele,
+      currnetId,
     };
   },
 };
